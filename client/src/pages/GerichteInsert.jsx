@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Select from 'react-dropdown-select'
 import api from '../api'
 
 import styled from 'styled-components'
@@ -77,6 +78,7 @@ class GerichteInsert extends Component {
         const { name, saison, komplex, typ, zutaten } = this.state
         const arrayZutaten = zutaten.split(',')
         const payload = { name, saison, komplex, typ, zutaten: arrayZutaten }
+        console.log(payload)
 
         await api.insertGericht(payload).then(res => {
             window.alert(`Gericht erfolgreich hinzugefügt`)
@@ -92,6 +94,28 @@ class GerichteInsert extends Component {
     
     render() {
         const { name, saison, komplex, typ, zutaten } = this.state
+
+        const optionsSaison = [
+            {value: "Frühling/Sommer", label: "Frühling/Sommer"},
+            {value: "Herbst/Winter", label: "Herbst/Winter"},
+            {value: "Ohne", label: "Ohne"},
+        ]
+
+        const optionsKomplex = [
+            {value: "Easy", label: "Easy"},
+            {value: "Normal", label: "Normal"},
+            {value: "Fancy", label: "Fancy"},
+        ]
+
+        const optionsTyp = [
+            {value: "Pasta", label: "Pasta"},
+            {value: "Suppe ", label: "Suppe"},
+            {value: "Kalt", label: "Kalt"},
+            {value: "Reis", label: "Reis"},
+            {value: "Kartoffeln ", label: "Kartoffeln"},
+            {value: "Andere", label: "Andere"},
+        ]
+
         return (
             <Wrapper>
                 <Title>Neues Gericht</Title>
@@ -102,29 +126,25 @@ class GerichteInsert extends Component {
                     value={name}
                     onChange={this.handleChangeInputName}
                 />
-
                 <Label>Saison: </Label>
-                <InputText
-                    type="text"
-                    value={saison}
-                    onChange={this.handleChangeInputSaison}
-                />  
+                <Select options={optionsSaison} 
+                        value={saison}
+                        onChange={this.handleChangeInputSaison}
+                /> 
 
                 <Label>Komplexität: </Label>
-                <InputText
-                    type="text"
-                    value={komplex}
-                    onChange={this.handleChangeInputKomplex}
-                />   
+                <Select options={optionsKomplex} 
+                        value={komplex}
+                        onChange={this.handleChangeInputKomplex}
+                /> 
 
                 <Label>Typ: </Label>
-                <InputText
-                    type="text"
-                    value={typ}
-                    onChange={this.handleChangeInputTyp}
-                />     
+                <Select options={optionsTyp} 
+                        value={typ}
+                        onChange={this.handleChangeInputTyp}
+                />   
 
-                <Label>Zutaten: </Label>
+                <Label>Zutaten (/ getrennt): </Label>
                 <InputText
                     type="text"
                     value={zutaten}
@@ -132,7 +152,7 @@ class GerichteInsert extends Component {
                 />
 
                 <Button onClick={this.handleIncludeGericht}>Gericht speichern</Button>
-                <CancelButton href={'/movies/list'}>Abbrechen</CancelButton>
+                <CancelButton href={'/gerichte/list'}>Abbrechen</CancelButton>
             </Wrapper>
         )
     }

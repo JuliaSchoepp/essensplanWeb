@@ -28,7 +28,7 @@ class UpdateGericht extends Component {
     }
 
     render() {
-        return <Update onClick={this.updateUser}>Ändern</Update>
+        return <Update onClick={this.updateGericht}>Ändern</Update>
     }
 }
 
@@ -47,7 +47,7 @@ class DeleteGericht extends Component {
     }
 
     render() {
-        return <Delete onClick={this.deleteUser}>Löschen</Delete>
+        return <Delete onClick={this.deleteGericht}>Löschen</Delete>
     }
 }
 
@@ -81,11 +81,6 @@ class GerichteList extends Component {
 
         const columns = [
             {
-                Header: 'ID',
-                accessor: '_id',
-                filterable: true,
-            },
-            {
                 Header: 'Name',
                 accessor: 'name',
                 filterable: true,
@@ -108,6 +103,7 @@ class GerichteList extends Component {
             {
                 Header: 'Zutaten',
                 accessor: 'zutaten',
+                filterable: true,
                 Cell: props => <span>{props.value.join(' / ')}</span>,
             },
             {
