@@ -47,25 +47,27 @@ class GerichteInsert extends Component {
             typ: '',
             zutaten: '',
         }
+
     }
+
 
     handleChangeInputName = async event => {
         const name = event.target.value
         this.setState({ name })
     }
 
-    handleChangeInputSaison = async event => {
-        const saison = event.target.value
+    handleChangeInputSaison = async (obj) => {
+        const saison = obj[0].label
         this.setState({ saison })
     }
 
-    handleChangeInputKomplex = async event => {
-        const komplex = event.target.value
+    handleChangeInputKomplex = async (obj) => {
+        const komplex = obj[0].label
         this.setState({ komplex })
     }
 
-    handleChangeInputTyp = async event => {
-        const typ = event.target.value
+    handleChangeInputTyp = async (obj) => {
+        const typ = obj[0].label
         this.setState({ typ })
     }
 
@@ -78,15 +80,14 @@ class GerichteInsert extends Component {
         const { name, saison, komplex, typ, zutaten } = this.state
         const arrayZutaten = zutaten.split(',')
         const payload = { name, saison, komplex, typ, zutaten: arrayZutaten }
-        console.log(payload)
 
         await api.insertGericht(payload).then(res => {
             window.alert(`Gericht erfolgreich hinzugefügt`)
             this.setState({
                 name: '',
-                saison: '',
-                komplex: '',
-                typ: '',
+                saison: 'Ohne',
+                komplex: 'Normal',
+                typ: 'Andere',
                 zutaten: '',
             })
         })
@@ -141,7 +142,7 @@ class GerichteInsert extends Component {
                 <Label>Typ: </Label>
                 <Select options={optionsTyp} 
                         value={typ}
-                        onChange={this.handleChangeInputTyp}
+                        onChange={(option) => this.handleChangeInputTyp(option)}
                 />   
 
                 <Label>Zutaten (/ getrennt): </Label>
