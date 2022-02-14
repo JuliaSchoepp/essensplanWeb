@@ -44,7 +44,7 @@ updateGericht = async (req, res) => {
         })
     }
 
-    Gericht.findOne({ _id: req.params.id }, (err, movie) => {
+    Gericht.findOne({ _id: req.params.id }, (err, gericht) => {
         if (err) {
             return res.status(404).json({
                 err,
@@ -62,7 +62,7 @@ updateGericht = async (req, res) => {
             .then(() => {
                 return res.status(200).json({
                     success: true,
-                    id: movie._id,
+                    id: gericht._id,
                     message: 'Gericht updated!',
                 })
             })

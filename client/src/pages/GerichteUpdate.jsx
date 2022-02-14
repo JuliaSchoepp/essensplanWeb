@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import api from '../api'
 
 import styled from 'styled-components'
+import { useParams } from 'react-router-dom'
 
 const Title = styled.h1.attrs({
     className: 'h1',
@@ -34,6 +35,7 @@ const CancelButton = styled.a.attrs({
 })`
     margin: 15px 15px 15px 5px;
 `
+
 
 class GerichtUpdate extends Component {
     constructor(props) {
@@ -74,7 +76,7 @@ class GerichtUpdate extends Component {
         this.setState({ zutaten })
     }
 
-    handleUpdateMovie = async () => {
+    handleUpdateGericht = async () => {
         const { id, name, saison, komplex, typ, zutaten } = this.state
         const arrayZutaten = zutaten.split('/')
         const payload = { name, saison, komplex, typ, zutaten: arrayZutaten }
@@ -92,7 +94,7 @@ class GerichtUpdate extends Component {
     }
 
     componentDidMount = async () => {
-        const { id } = this.state
+        const { id } = this.state;
         const gericht = await api.getGerichtById(id)
 
         this.setState({

@@ -75,12 +75,12 @@ class InputMahlzeit extends Component {
 
     handleChangeInputGerichtName = async event => {
         const gerichtName = event.target.value
+        // wenn nicht in Gerichte -> Spalte wird rot
         this.setState({ gerichtName })
     }
 
     handleIncludeMahlzeit = async () => {
         const { mahlzeitName, gerichtName } = this.state
-        // wenn nicht in Gerichte -> Spalte wird rot
         }
 
         render() {
@@ -89,7 +89,7 @@ class InputMahlzeit extends Component {
     
             return (
                 <Wrapper>
-                    <Title>Mahlzeit Planen</Title>
+                    <Title>Planer</Title>
     
                     <Label>Name: </Label>
                     <InputText
@@ -106,6 +106,7 @@ class InputMahlzeit extends Component {
                     />
     
                     <Button onClick={this.handleIncludeMahlzeit}>Mahlzeit eintragen</Button>
+                    <Button onClick={this.getRandom}>Random</Button>
                 </Wrapper>
             )
         }
