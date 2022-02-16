@@ -34,6 +34,32 @@ const Button = styled.button.attrs({
     margin: 15px 15px 15px 5px;
 `
 
+const ButtonR = styled.button.attrs({
+    className: `btn btn-primary right`,
+})`
+    margin: 15px 15px 15px 5px;
+`
+
+const TableRowInKB = styled.tr`
+    background-color: #f6fcf2;
+`
+
+const TableRowNotKB = styled.tr`
+    background-color: #fcfbf5;
+`
+
+const TableHead = styled.thead`
+    margin: 15px 15px 15px 5px;
+    padding: 8px;
+    width: 25%;
+`
+
+const THead = styled.th`
+    margin: 15px 15px 15px 5px;
+    padding: 8px;
+    width: 25%;
+`
+
 class DeleteGericht extends Component {
     deleteMahlzeit = event => {
         event.preventDefault()
@@ -57,160 +83,101 @@ class DeleteGericht extends Component {
     }
 }
 
-class InputMahlzeit extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            mahlzeitName: '',
-            gerichtName: '',
-        }
-        
-        } 
-
-    handleChangeInputMahlzeitName = async event => {
-        const mahlzeitName = event.target.value
-        this.setState({ mahlzeitName })
-    }
-
-    handleChangeInputGerichtName = async event => {
-        const gerichtName = event.target.value
-        // wenn nicht in Gerichte -> Spalte wird rot
-        this.setState({ gerichtName })
-    }
-
-    handleIncludeMahlzeit = async () => {
-        const { mahlzeitName, gerichtName } = this.state
-        }
-
-        render() {
-            const { mahlzeitName, gerichtName } = this.state
-    
-    
-            return (
-                <Wrapper>
-                    <Title>Planer</Title>
-    
-                    <Label>Name: </Label>
-                    <InputText
-                        type="text"
-                        value={mahlzeitName}
-                        onChange={this.handleChangeInputMahlzeitName}
-                    />
-    
-                    <Label>Gericht: </Label>
-                    <InputText
-                        type="text"
-                        value={gerichtName}
-                        onChange={this.handleChangeInputGerichtName}
-                    />
-    
-                    <Button onClick={this.handleIncludeMahlzeit}>Mahlzeit eintragen</Button>
-                    <Button onClick={this.getRandom}>Random</Button>
-                </Wrapper>
-            )
-        }
-}
-
-
-class Essensplan extends Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            gerichteNamen: [],
-            columns: [],
-            isLoading: false,
-            planData: []
-        }
-    }
-
-    componentDidMount = async () => {
-        this.setState({ isLoading: true })
-
-        await api.getAllGerichte().then(gerichte => {
-            
-            let names = []
-
-            for (var i in gerichte.data){
-                names.push(i.name);
-            }
-
-            this.setState({
-                gerichteNamen: names,
-                isLoading: false,
-            })
-        })
-    }
-
-    handleSavePlan = async () => {
-        const { planData } = this.state
-        const payload = { planData }
-        console.log(payload)
-
-        // send to server to do sth with it
-        /*
-        await api.insertGericht(payload).then(res => {
-            window.alert(`Gericht erfolgreich hinzugefügt`)
-            this.setState({
-                name: '',
-                saison: '',
-                komplex: '',
-                typ: '',
-                zutaten: '',
-            })
-        })
-        */
-    } 
-
+class InputArea extends Component {
     render() {
-        const { gerichteNamen, isLoading, planData } = this.state
-
-        const columns = [
-            {
-                Header: 'Name',
-                accessor: 'name',
-            },
-            {
-                Header: 'Gericht',
-                accessor: 'gericht',
-            },
-            {
-                Header: 'In Kochbuch?',
-                accessor: 'inKochbuch',
-            },
-            {
-                Header: '',
-                accessor: '',
-                Cell: function(props) {
-                    return (
-                        <span>
-                            <DeleteGericht id={props.original._id} />
-                        </span>
-                    )
-                },
-            },
-        ]
-
-        let showTable = true
-
+        const name = ""
+        const gericht = ""
         return (
             <Wrapper>
-            <InputMahlzeit/>
-                {showTable && (
-                    <ReactTable
-                        data={planData}
-                        columns={columns}
-                        loading={isLoading}
-                        defaultPageSize={10}
-                        showPageSizeOptions={true}
-                        minRows={0}
-                    />
-                )}
-            <Button onClick={this.handleSavePlan}>Plan speichern</Button>
+                <Title>
+                    Planen
+                </Title>
+                <Label>
+                    Name der Mahlzeit:
+                </Label>
+                <InputText
+                    type="text"
+                    vaue={name}
+                />
+                <Label>
+                    Gepantes Gericht:
+                </Label>
+                <InputText
+                    type="text"
+                    vaue={gericht}
+                />
+                <Button>Planen</Button>
             </Wrapper>
         )
     }
 }
 
-export default Essensplan
+
+class MahlzeitRow extends Component {
+    render() {
+        const plan = this.props.plan
+        const rowColor = plan.inKochbuch ? TableRowInKB : TableRowNotKB;
+        if (plan.inKochbuch) {
+            return (
+                <rowColor>
+                    <td>plan.name</td>
+                    <td>plan.gericht</td>
+                    <td><DeleteGericht/></td>
+                </rowColor>
+            )
+        }
+    }
+}
+
+
+class PlanDarst extends Component {
+    render(){
+        const rows = [];
+        this.props.plans.forEach((plan) => {
+            rows.push(
+                <MahlzeitRow
+                    plan={plan}
+                    key={plan.name}
+                    />
+            )
+        });
+        return (
+            <Wrapper>
+            <table>
+                <TableHead>
+                    <tr>
+                        <THead>Name der Mahlzeit</THead>
+                        <THead>Geplantes Gericht</THead>
+                        <THead>Bearbeiten</THead>
+                    </tr>
+                </TableHead>
+                <tbody>{rows}</tbody>
+            </table>
+            </Wrapper>
+        );
+    }
+}
+
+
+class Planer extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            geplanteMahlzeiten:  []
+        }
+    }
+    
+    render() {
+        return (
+            <Wrapper>
+                <InputArea/>
+                <PlanDarst plans={this.state.geplanteMahlzeiten}/>
+                <ButtonR>Plan speichern</ButtonR>
+            </Wrapper>
+        )
+    }
+}
+
+
+export default Planer
