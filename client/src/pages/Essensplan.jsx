@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import 'react-table-6/react-table.css'
 
 const Wrapper = styled.div`
-padding: 0 40px 40px 40px;
+    padding: 0 40px 40px 40px;
 `
 
 const Delete = styled.div`
@@ -33,48 +33,36 @@ const Button = styled.button.attrs({
     margin: 15px 15px 15px 5px;
 `
 
-const ButtonR = styled.button.attrs({
-    className: `btn btn-primary right`,
+const ButtonSave = styled.button.attrs({
+    className: `btn btn-secondary btn-lg btn-block`,
 })`
     margin: 15px 15px 15px 5px;
 `
 
 const TableRow = styled.tr`
-    background-color: ${props => props.inKB? '#f6fcf2': 'blue'};
+    background-color: ${props => props.inKB? '#f6fcf2': '#f6fcf6'};
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
 `
 
 const TableHead = styled.thead`
-    margin: 15px 15px 15px 5px;
     padding: 8px;
-    width: 25%;
+    border-bottom: 1px solid #ddd;
 `
 
 const THead = styled.th`
-    margin: 15px 15px 15px 5px;
     padding: 8px;
-    width: 25%;
+    border-bottom: 1px solid #ddd;
 `
 
 class DeleteGericht extends Component {
     deleteMahlzeit = event => {
         event.preventDefault()
 
-        // Eintrag löschen
-
-        /*
-        if (
-            window.confirm(
-                `Willst du die Mahlzeit ${this.props.id} endgütig löschen?`,
-            )
-        ) {
-            api.deleteGerichtById(this.props.id)
-            window.location.reload()
-        }
-        */
     }
 
     render() {
-        return <Delete onClick={this.deleteGericht}>Löschen</Delete>
+        return <Delete onClick={this.deleteMahlzeit}>Löschen</Delete>
     }
 }
 
@@ -92,7 +80,9 @@ class InputArea extends Component {
         }
     }
 
-    // handleRandom = 
+    handleRandom = async (event) => {
+        
+    }
     
     componentDidMount = async () => {
         this.setState({ isLoading: true })
@@ -198,7 +188,7 @@ class PlanDarst extends Component {
         });
         return (
             <Wrapper>
-            <table>
+            <table className="table">
                 <TableHead>
                     <tr>
                         <THead>Name der Mahlzeit</THead>
@@ -235,7 +225,9 @@ class Planer extends Component {
             <Wrapper>
                 <InputArea onPlanen={this.handlePlanen}/>
                 <PlanDarst plans={this.state.geplanteMahlzeiten}/>
-                <ButtonR>Plan speichern</ButtonR>
+                <Wrapper>
+                <ButtonSave>Plan speichern</ButtonSave>
+                </Wrapper>
             </Wrapper>
         )
     }
