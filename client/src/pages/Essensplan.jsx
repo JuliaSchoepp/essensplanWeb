@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import ReactTable from 'react-table-6'
 import api from '../api'
+import { Hint } from 'react-autocomplete-hint'
 
 import styled from 'styled-components'
 
@@ -25,7 +25,6 @@ const Label = styled.label`
 const InputText = styled.input.attrs({
     className: 'form-control',
 })`
-    margin: 5px;
 `
 
 const Button = styled.button.attrs({
@@ -40,12 +39,8 @@ const ButtonR = styled.button.attrs({
     margin: 15px 15px 15px 5px;
 `
 
-const TableRowInKB = styled.tr`
-    background-color: #f6fcf2;
-`
-
-const TableRowNotKB = styled.tr`
-    background-color: #fcfbf5;
+const TableRow = styled.tr`
+    background-color: ${props => props.inKB? '#f6fcf2': 'blue'};
 `
 
 const TableHead = styled.thead`
@@ -84,9 +79,67 @@ class DeleteGericht extends Component {
 }
 
 class InputArea extends Component {
+    
+    constructor(props){
+        super(props)
+        this.state = {
+        isLoading: false,
+        namenListe: [],
+        nameInput: "",
+        gerichtInput: "",
+        gerichteListe: [],
+        randomTries: []
+        }
+    }
+
+    // handleRandom = 
+    
+    componentDidMount = async () => {
+        this.setState({ isLoading: true })
+
+        await api.getAllGerichte().then(gerichte => {
+
+            let names = []
+
+            const gerArray = gerichte.data.data
+
+            gerArray.forEach( function(gerObj){
+                names.push(gerObj.name)
+            });
+
+            this.setState({
+                namenListe: names,
+                isLoading: false,
+            })
+        })
+    }
+
+    handleChangeInputName = async event => {
+        const nameInput = event.target.value
+        this.setState({ nameInput })
+    }
+
+    handleChangeInputGericht = async event => {
+        const gerichtInput = event.target.value
+        this.setState({ gerichtInput })
+    }
+
+    handlePlanen = async (event) => {
+        event.preventDefault()
+        const newPlan = {
+            nameMz: this.state.nameInput,
+            gericht: this.state.gerichtInput,
+            inKochbuch: this.state.nameInput in this.state.namenListe? true: false,
+        }
+        this.props.onPlanen(newPlan)
+        this.setState({
+            nameInput: "",
+            gerichtInput: "",
+            }
+        )
+    }
+
     render() {
-        const name = ""
-        const gericht = ""
         return (
             <Wrapper>
                 <Title>
@@ -97,16 +150,20 @@ class InputArea extends Component {
                 </Label>
                 <InputText
                     type="text"
-                    vaue={name}
+                    value={this.state.nameInput}
+                    onChange={this.handleChangeInputName}
                 />
                 <Label>
-                    Gepantes Gericht:
+                    Geplantes Gericht:
                 </Label>
-                <InputText
-                    type="text"
-                    vaue={gericht}
-                />
-                <Button>Planen</Button>
+                <Hint options={this.state.namenListe} allowTabFill={true}>
+                    <input
+                    className='form-control'
+                    value={this.state.gerichtInput}
+                    onChange={this.handleChangeInputGericht} />
+                </Hint>
+                <Button onClick={this.handlePlanen}>Planen</Button>
+                <Button onClick={this.handleRandom}>Random</Button>
             </Wrapper>
         )
     }
@@ -116,24 +173,22 @@ class InputArea extends Component {
 class MahlzeitRow extends Component {
     render() {
         const plan = this.props.plan
-        const rowColor = plan.inKochbuch ? TableRowInKB : TableRowNotKB;
-        if (plan.inKochbuch) {
-            return (
-                <rowColor>
-                    <td>plan.name</td>
-                    <td>plan.gericht</td>
-                    <td><DeleteGericht/></td>
-                </rowColor>
+        
+        return (
+            <TableRow inKb={plan.inKochbuch}>
+                <td>{plan.nameMz}</td>
+                <td>{plan.gericht}</td>
+                <td><DeleteGericht/></td>
+            </TableRow>
             )
         }
     }
-}
 
 
 class PlanDarst extends Component {
     render(){
         const rows = [];
-        this.props.plans.forEach((plan) => {
+        this.props.plans.map((plan) => {
             rows.push(
                 <MahlzeitRow
                     plan={plan}
@@ -148,7 +203,7 @@ class PlanDarst extends Component {
                     <tr>
                         <THead>Name der Mahlzeit</THead>
                         <THead>Geplantes Gericht</THead>
-                        <THead>Bearbeiten</THead>
+                        <THead></THead>
                     </tr>
                 </TableHead>
                 <tbody>{rows}</tbody>
@@ -164,14 +219,21 @@ class Planer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            geplanteMahlzeiten:  []
+            geplanteMahlzeiten:  [],
         }
+        this.handlePlanen = this.handlePlanen.bind(this);
+    }
+
+    handlePlanen(newPlan){
+        this.setState({
+            geplanteMahlzeiten:[...this.state.geplanteMahlzeiten, newPlan]
+        })
     }
     
     render() {
         return (
             <Wrapper>
-                <InputArea/>
+                <InputArea onPlanen={this.handlePlanen}/>
                 <PlanDarst plans={this.state.geplanteMahlzeiten}/>
                 <ButtonR>Plan speichern</ButtonR>
             </Wrapper>
