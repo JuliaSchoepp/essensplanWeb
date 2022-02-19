@@ -240,6 +240,12 @@ class Planer extends Component {
             geplanteMahlzeiten:[...this.state.geplanteMahlzeiten, newPlan]
         })
     }
+
+    handleSpeichern = async (event) => {
+        event.preventDefault()
+        console.log(this.state.geplanteMahlzeiten)
+        window.location.href = '/save'
+    }
     
     render() {
         return (
@@ -247,7 +253,7 @@ class Planer extends Component {
                 <InputArea onPlanen={this.handlePlanen}/>
                 <PlanDarst plans={this.state.geplanteMahlzeiten}/>
                 <Wrapper>
-                <ButtonSave>Plan speichern</ButtonSave>
+                <ButtonSave onClick={this.handleSpeichern}>Plan speichern</ButtonSave>
                 </Wrapper>
             </Wrapper>
         )

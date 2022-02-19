@@ -9,6 +9,7 @@ export const getAllGerichte = () => api.get(`/gerichte`)
 export const updateGerichtById = (id, payload) => api.put(`/gericht/${id}`, payload)
 export const deleteGerichtById = id => api.delete(`/gericht/${id}`)
 export const getGerichtById = id => api.get(`/gericht/${id}`)
+export const savePlan = payload => api.post('/save', payload)
 
 const apis = {
     insertGericht,
@@ -16,6 +17,7 @@ const apis = {
     updateGerichtById,
     deleteGerichtById,
     getGerichtById,
+    savePlan,
 }
 
 export default apis

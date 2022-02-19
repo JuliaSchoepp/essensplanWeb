@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import ReactTable from 'react-table-6'
 import api from '../api'
-import {BrowserRouter, Route} from "react-router-dom";
 
 import styled from 'styled-components'
 
