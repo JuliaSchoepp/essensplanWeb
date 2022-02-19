@@ -40,7 +40,7 @@ const ButtonSave = styled.button.attrs({
 `
 
 const TableRow = styled.tr`
-    background-color: ${props => props.inKB? '#f6fcf2': '#f6fcf6'};
+    background-color: ${props => props.inKB? '#f6fcf2': '#faf5ed'};
     border-bottom: 1px solid #ddd;
     padding: 8px;
 `
@@ -81,7 +81,28 @@ class InputArea extends Component {
     }
 
     handleRandom = async (event) => {
+        let keepSearching = true
+        while (keepSearching){
+            if (this.state.randomTries.length == this.state.namenListe.length){
+                this.setState({
+                    gerichtInput: "Keine weiteren Optionen"
+                })
+                keepSearching = false
+            }
+
+            const randIndex = Math.floor(Math.random() * this.state.namenListe.length)
+            if (!this.state.randomTries.includes(randIndex)){
+                keepSearching = false
+                const randomGericht = this.state.namenListe[randIndex]
+                this.setState({
+                    randomTries: [...this.state.randomTries, randIndex],
+                    gerichtInput: randomGericht,
+                })
+            }
+        }
         
+
+
     }
     
     componentDidMount = async () => {
@@ -119,7 +140,7 @@ class InputArea extends Component {
         const newPlan = {
             nameMz: this.state.nameInput,
             gericht: this.state.gerichtInput,
-            inKochbuch: this.state.nameInput in this.state.namenListe? true: false,
+            inKochbuch: this.state.namenListe.includes(this.state.nameInput)? true: false,
         }
         this.props.onPlanen(newPlan)
         this.setState({
@@ -136,7 +157,7 @@ class InputArea extends Component {
                     Planen
                 </Title>
                 <Label>
-                    Name der Mahlzeit:
+                    Name der Mahlzeit
                 </Label>
                 <InputText
                     type="text"
@@ -144,7 +165,7 @@ class InputArea extends Component {
                     onChange={this.handleChangeInputName}
                 />
                 <Label>
-                    Geplantes Gericht:
+                    Geplantes Gericht
                 </Label>
                 <Hint options={this.state.namenListe} allowTabFill={true}>
                     <input
