@@ -10,6 +10,9 @@ export const updateGerichtById = (id, payload) => api.put(`/gericht/${id}`, payl
 export const deleteGerichtById = id => api.delete(`/gericht/${id}`)
 export const getGerichtById = id => api.get(`/gericht/${id}`)
 export const savePlan = payload => api.post('/save', payload)
+export const downloadListe = () => api.get('/downloads/liste')
+export const downloadPlan = () => api.get('/downloads/plan')
+
 
 const apis = {
     insertGericht,
@@ -18,6 +21,8 @@ const apis = {
     deleteGerichtById,
     getGerichtById,
     savePlan,
+    downloadListe,
+    downloadPlan,
 }
 
 export default apis

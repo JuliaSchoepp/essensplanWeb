@@ -47,12 +47,12 @@ class SaveFiles extends Component {
                 <Title>
                     Hier kommen die Dateien zum Download hin:
                 </Title>
-                <Label>
-                    Essensplan
-                </Label>
-                <Label>
-                    Einkaufsliste
-                </Label>
+                <Button onClick={window.open('./api/downloads/plan')}>
+                    Plan laden
+                </Button>
+                <Button onClick={api.downloadListe}>
+                    Einkaufsliste laden
+                </Button>
                 <Label>
                     Vorschau des Plans?!
                 </Label>

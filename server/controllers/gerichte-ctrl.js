@@ -120,10 +120,27 @@ getGerichte = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+savePlan = async (req, res) => {
+    console.log("save")
+}
+
+downloadListe = async (req, res) => {
+    const file = "../downloads/einkaufsliste.txt";
+    res.download(file);
+}
+
+downloadPlan = async (req, res) => {
+    const file = "../downloads/wochenplan.pdf";
+    res.download(file);
+}
+
 module.exports = {
     createGericht,
     updateGericht,
     deleteGericht,
     getGerichte,
     getGerichtById,
+    savePlan,
+    downloadListe,
+    downloadPlan,
 }
