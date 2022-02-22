@@ -1,5 +1,6 @@
 
 const Gericht = require('../models/gericht-model')
+const fs = require('fs')
 
 createGericht = (req, res) => {
     const body = req.body
@@ -106,6 +107,10 @@ getGerichtById = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+getGerichtbyName = function (gerichtName) {
+    return Gericht.findOne({name: gerichtName}).exec();
+}
+
 getGerichte = async (req, res) => {
     await Gericht.find({}, (err, gerichte) => {
         if (err) {
@@ -121,17 +126,41 @@ getGerichte = async (req, res) => {
 }
 
 savePlan = async (req, res) => {
-    console.log("save")
+    const planCompl = req.body;
+    const plan = planCompl.filter(el => el.inKochbuch);
+    let einkaufsliste = {};
+    let promises = [];
+    plan.forEach(function(plan){
+            promises.push(
+            getGerichtbyName(plan.gericht).then(
+                (res) => {
+                    const zutaten = res.zutaten;
+                    zutaten.forEach(function(zutat){
+                        if (zutat in einkaufsliste){
+                            return einkaufsliste[zutat] += 1;
+                        }
+                        else {
+                            return einkaufsliste[zutat] = 1;
+                        }
+                    })
+                }
+            ).catch ((error) => {
+                console.log(error);
+            })
+        );
+    });
+    Promise.all(promises).then(() => fs.writeFileSync('../downloads/einkaufsliste.txt', JSON.stringify(einkaufsliste, null, 2), 'utf-8'));
+
 }
 
 downloadListe = async (req, res) => {
     const file = "../downloads/einkaufsliste.txt";
-    res.download(file);
+    res.download(file, 'einkaufsliste.txt');
 }
 
 downloadPlan = async (req, res) => {
     const file = "../downloads/wochenplan.pdf";
-    res.download(file);
+    res.download(file, 'plan.pdf');
 }
 
 module.exports = {
