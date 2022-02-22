@@ -41,16 +41,26 @@ class SaveFiles extends Component {
         super(props)
     }
 
+    handleDownloadPlan = event => {
+        event.preventDefault();
+        window.open('http://localhost:3000/api/downloads/plan')
+    }
+
+    handleDownloadListe = event => {
+        event.preventDefault();
+        window.open('http://localhost:3000/api/downloads/liste')
+    }
+
     render(){
         return(
             <Wrapper>
                 <Title>
                     Hier kommen die Dateien zum Download hin:
                 </Title>
-                <Button onClick={window.open('./api/downloads/plan')}>
+                <Button onClick={this.handleDownloadPlan}>
                     Plan laden
                 </Button>
-                <Button onClick={api.downloadListe}>
+                <Button onClick={this.handleDownloadListe}>
                     Einkaufsliste laden
                 </Button>
                 <Label>

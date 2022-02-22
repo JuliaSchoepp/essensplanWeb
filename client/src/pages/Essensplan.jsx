@@ -40,7 +40,7 @@ const ButtonSave = styled.button.attrs({
 `
 
 const TableRow = styled.tr`
-    background-color: ${props => props.inKB? '#f6fcf2': '#faf5ed'};
+    background-color: ${props => props.inKb ? '#f6fcf2': '#faf5ed'};
     border-bottom: 1px solid #ddd;
     padding: 8px;
 `
@@ -140,7 +140,7 @@ class InputArea extends Component {
         const newPlan = {
             nameMz: this.state.nameInput,
             gericht: this.state.gerichtInput,
-            inKochbuch: this.state.namenListe.includes(this.state.nameInput)? true: false,
+            inKochbuch: this.state.namenListe.includes(this.state.gerichtInput)? true: false,
         }
         this.props.onPlanen(newPlan)
         this.setState({
@@ -242,9 +242,11 @@ class Planer extends Component {
     }
 
     handleSpeichern = async (event) => {
-        event.preventDefault()
-        console.log(this.state.geplanteMahlzeiten)
-        window.location.href = '/save'
+        event.preventDefault();
+        const payload = this.state.geplanteMahlzeiten;
+        await api.savePlan(payload).then(
+            window.location.href = '/save'
+        )
     }
     
     render() {
