@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import api from '../api'
 import { Hint } from 'react-autocomplete-hint'
+import Select from 'react-dropdown-select'
 
 import styled from 'styled-components'
 
@@ -167,6 +168,10 @@ class InputArea extends Component {
                 <Label>
                     Geplantes Gericht
                 </Label>
+                <Select options={this.state.namenListe} // Siehe GerichtInsert! -> erst mappen
+                        value={this.state.gerichtInput}
+                        onChange={this.handleChangeInputGericht}
+                /> 
                 <Hint options={this.state.namenListe} allowTabFill={true}>
                     <input
                     className='form-control'
@@ -245,7 +250,7 @@ class Planer extends Component {
         event.preventDefault();
         const payload = this.state.geplanteMahlzeiten;
         await api.savePlan(payload).then(
-            window.location.href = '/save'
+                // window.location.href = '/save'
         )
     }
     

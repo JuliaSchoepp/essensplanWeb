@@ -78,7 +78,8 @@ class GerichteInsert extends Component {
 
     handleIncludeGericht = async () => {
         const { name, saison, komplex, typ, zutaten } = this.state
-        const arrayZutaten = zutaten.split(',')
+        const arrayZutatenWhitespace = zutaten.split(',')
+        const arrayZutaten = arrayZutatenWhitespace.map(x => x.trim())
         const payload = { name, saison, komplex, typ, zutaten: arrayZutaten }
 
         await api.insertGericht(payload).then(res => {
@@ -145,7 +146,7 @@ class GerichteInsert extends Component {
                         onChange={(option) => this.handleChangeInputTyp(option)}
                 />   
 
-                <Label>Zutaten (/ getrennt): </Label>
+                <Label>Zutaten (, getrennt): </Label>
                 <InputText
                     type="text"
                     value={zutaten}

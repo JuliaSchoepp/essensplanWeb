@@ -104,7 +104,7 @@ class GerichteList extends Component {
                 Header: 'Zutaten',
                 accessor: 'zutaten',
                 filterable: true,
-                Cell: props => <span>{props.value.join(' / ')}</span>,
+                Cell: props => <span>{props.value.join(', ')}</span>,
             },
             {
                 Header: '',

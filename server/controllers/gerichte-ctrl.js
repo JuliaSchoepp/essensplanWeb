@@ -125,6 +125,10 @@ getGerichte = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+formatEinkaufsliste = function(jsonString){
+    return jsonString.replace("{", "").replace("}", "").replaceAll("\"", "").replaceAll(",", "")
+}
+
 savePlan = async (req, res) => {
     const planCompl = req.body;
     const plan = planCompl.filter(el => el.inKochbuch);
@@ -149,8 +153,15 @@ savePlan = async (req, res) => {
             })
         );
     });
-    Promise.all(promises).then(() => fs.writeFileSync('../downloads/einkaufsliste.txt', JSON.stringify(einkaufsliste, null, 2), 'utf-8'));
-
+    Promise.all(promises).then(() => {
+        const sorted = Object.keys(einkaufsliste).sort().reduce((acc, key) => ({
+            ...acc,
+            [key]: einkaufsliste[key]
+        }), {})
+        printString = formatEinkaufsliste(JSON.stringify(sorted, null, 2))
+        console.log(printString)
+        fs.writeFileSync('../downloads/einkaufsliste.txt', printString, 'utf-8');
+    })
 }
 
 downloadListe = async (req, res) => {

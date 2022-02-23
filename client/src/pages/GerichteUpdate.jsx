@@ -78,7 +78,7 @@ class GerichtUpdate extends Component {
 
     handleUpdateGericht = async () => {
         const { id, name, saison, komplex, typ, zutaten } = this.state
-        const arrayZutaten = zutaten.split('/')
+        const arrayZutaten = zutaten.split(',')
         const payload = { name, saison, komplex, typ, zutaten: arrayZutaten }
 
         await api.updateGerichtById(id, payload).then(res => {
@@ -102,7 +102,7 @@ class GerichtUpdate extends Component {
             saison: gericht.data.data.saison,
             komplex: gericht.data.data.komplex,
             typ: gericht.data.data.typ,
-            zutaten: gericht.data.data.zutaten.join('/'),
+            zutaten: gericht.data.data.zutaten.join(', '),
         })
     }
 
