@@ -77,7 +77,7 @@ class GerichteList extends Component {
 
     render() {
         const { gerichte, isLoading } = this.state
-        console.log('TCL: Gerichte -> render -> gerichte', gerichte)
+        // console.log('TCL: Gerichte -> render -> gerichte', gerichte)
 
         const columns = [
             {
