@@ -56,17 +56,6 @@ const THead = styled.th`
     border-bottom: 1px solid #ddd;
 `
 
-class DeleteGericht extends Component {
-    deleteMahlzeit = event => {
-        event.preventDefault()
-
-    }
-
-    render() {
-        return <Delete onClick={this.deleteMahlzeit}>Löschen</Delete>
-    }
-}
-
 class InputArea extends Component {
     
     constructor(props){
@@ -131,8 +120,8 @@ class InputArea extends Component {
         this.setState({ nameInput })
     }
 
-    handleChangeInputGericht = async event => {
-        const gerichtInput = event.target.value
+    handleChangeInputGericht = async (obj) => {
+        const gerichtInput = obj[0].label
         this.setState({ gerichtInput })
     }
 
@@ -146,12 +135,17 @@ class InputArea extends Component {
         this.props.onPlanen(newPlan)
         this.setState({
             nameInput: "",
-            gerichtInput: "",
+            gerichtInput: null,
             }
         )
     }
 
     render() {
+        const options = this.state.namenListe.map(namen => {
+            return {value: namen,
+                    label: namen}
+        })
+
         return (
             <Wrapper>
                 <Title>
@@ -168,16 +162,16 @@ class InputArea extends Component {
                 <Label>
                     Geplantes Gericht
                 </Label>
-                <Select options={this.state.namenListe} // Siehe GerichtInsert! -> erst mappen
+                <Select options={options}
                         value={this.state.gerichtInput}
                         onChange={this.handleChangeInputGericht}
                 /> 
-                <Hint options={this.state.namenListe} allowTabFill={true}>
+                {/* <Hint options={this.state.namenListe} allowTabFill={true}>
                     <input
                     className='form-control'
                     value={this.state.gerichtInput}
                     onChange={this.handleChangeInputGericht} />
-                </Hint>
+                </Hint> */}
                 <Button onClick={this.handlePlanen}>Planen</Button>
                 <Button onClick={this.handleRandom}>Random</Button>
             </Wrapper>
@@ -194,12 +188,23 @@ class MahlzeitRow extends Component {
             <TableRow inKb={plan.inKochbuch}>
                 <td>{plan.nameMz}</td>
                 <td>{plan.gericht}</td>
-                <td><DeleteGericht/></td>
+                <td><DeleteGericht nameMz={plan.nameMz} onDelete={this.props.onDelete}/></td>
             </TableRow>
             )
         }
     }
 
+    class DeleteGericht extends Component {
+        deleteMahlzeit = event => {
+            event.preventDefault()
+            const mahlzeit = this.props.nameMz;
+            this.props.onDelete(mahlzeit);
+        }
+    
+        render() {
+            return <Delete onClick={this.deleteMahlzeit}>Löschen</Delete>
+        }
+    }
 
 class PlanDarst extends Component {
     render(){
@@ -209,6 +214,7 @@ class PlanDarst extends Component {
                 <MahlzeitRow
                     plan={plan}
                     key={plan.name}
+                    onDelete={this.props.onDelete}
                     />
             )
         });
@@ -229,6 +235,33 @@ class PlanDarst extends Component {
     }
 }
 
+class DownloadArea extends Component {
+    handleDownloadPlan = event => {
+        event.preventDefault();
+        window.open('http://localhost:3000/api/downloads/plan')
+    }
+
+    handleDownloadListe = event => {
+        event.preventDefault();
+        window.open('http://localhost:3000/api/downloads/liste')
+    }
+
+    render(){
+        return(
+            <Wrapper>
+            <Title>
+                Download
+            </Title>
+            <Button onClick={this.handleDownloadPlan}>
+                Plan laden
+            </Button>
+            <Button onClick={this.handleDownloadListe}>
+                Einkaufsliste laden
+            </Button>
+        </Wrapper>
+        )
+    }
+}
 
 class Planer extends Component {
     
@@ -236,21 +269,44 @@ class Planer extends Component {
         super(props);
         this.state = {
             geplanteMahlzeiten:  [],
+            downloadIsHidden: true
         }
         this.handlePlanen = this.handlePlanen.bind(this);
+        this.toggleHidden = this.toggleHidden.bind(this);
+        this.deletePlan = this.deletePlan.bind(this);
+    }
+
+    deletePlan(mzName){
+        const newList = this.state.geplanteMahlzeiten.filter( function (plan){
+            return plan.nameMz != mzName
+        })
+        this.setState({
+            geplanteMahlzeiten: newList
+        })
+    }
+
+    toggleHidden() {
+        this.setState({
+            downloadIsHidden: !this.state.downloadIsHidden
+        })
     }
 
     handlePlanen(newPlan){
+        const geplanteMzNamen = this.state.geplanteMahlzeiten.map(plan => plan.nameMz);
+        if (geplanteMzNamen.includes(newPlan.nameMz)){
+            alert("Mahlzeitnamen müssen eindeutig sein!")
+        } else {
         this.setState({
             geplanteMahlzeiten:[...this.state.geplanteMahlzeiten, newPlan]
         })
+    }
     }
 
     handleSpeichern = async (event) => {
         event.preventDefault();
         const payload = this.state.geplanteMahlzeiten;
         await api.savePlan(payload).then(
-                // window.location.href = '/save'
+                this.toggleHidden()
         )
     }
     
@@ -258,10 +314,11 @@ class Planer extends Component {
         return (
             <Wrapper>
                 <InputArea onPlanen={this.handlePlanen}/>
-                <PlanDarst plans={this.state.geplanteMahlzeiten}/>
+                <PlanDarst plans={this.state.geplanteMahlzeiten} onDelete={this.deletePlan}/>
                 <Wrapper>
                 <ButtonSave onClick={this.handleSpeichern}>Plan speichern</ButtonSave>
                 </Wrapper>
+                {!this.state.downloadIsHidden && <DownloadArea />}
             </Wrapper>
         )
     }

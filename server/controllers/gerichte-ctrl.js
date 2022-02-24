@@ -129,8 +129,33 @@ formatEinkaufsliste = function(jsonString){
     return jsonString.replace("{", "").replace("}", "").replaceAll("\"", "").replaceAll(",", "")
 }
 
+printPDF = function(planObjects){
+    const PDFDocument = require('pdfkit');
+    const doc = new PDFDocument({font: 'Helvetica'});
+    doc.pipe(fs.createWriteStream('../downloads/wochenplan.pdf'));
+    doc.fontSize(20);
+    doc.font('Helvetica-Bold')
+        .text('Wochenplan', {
+        align: 'center'
+    }).moveDown()
+    planObjects.forEach(function(plan){
+        doc.fontSize(14);
+        doc.font('Helvetica')
+            .text(plan.nameMz, {
+                align: 'left',
+                underline: 'true'
+            }).moveUp().text(plan.gericht, {
+            align: 'left',
+            indent: 100
+        }).moveDown()
+    }
+    )
+    doc.end();
+}
+
 savePlan = async (req, res) => {
     const planCompl = req.body;
+    printPDF(planCompl);
     const plan = planCompl.filter(el => el.inKochbuch);
     let einkaufsliste = {};
     let promises = [];
@@ -158,8 +183,7 @@ savePlan = async (req, res) => {
             ...acc,
             [key]: einkaufsliste[key]
         }), {})
-        printString = formatEinkaufsliste(JSON.stringify(sorted, null, 2))
-        console.log(printString)
+        printString = formatEinkaufsliste(JSON.stringify(sorted, null, 2));
         fs.writeFileSync('../downloads/einkaufsliste.txt', printString, 'utf-8');
     })
 }
