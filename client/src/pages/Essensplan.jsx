@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import api from '../api'
 import { Hint } from 'react-autocomplete-hint'
-import Select from 'react-dropdown-select'
 
 import styled from 'styled-components'
 
@@ -120,8 +119,8 @@ class InputArea extends Component {
         this.setState({ nameInput })
     }
 
-    handleChangeInputGericht = async (obj) => {
-        const gerichtInput = obj[0].label
+    handleChangeInputGericht = async (event) => {
+        const gerichtInput = event.target.value
         this.setState({ gerichtInput })
     }
 
@@ -135,16 +134,12 @@ class InputArea extends Component {
         this.props.onPlanen(newPlan)
         this.setState({
             nameInput: "",
-            gerichtInput: null,
+            gerichtInput: "",
             }
         )
     }
 
     render() {
-        const options = this.state.namenListe.map(namen => {
-            return {value: namen,
-                    label: namen}
-        })
 
         return (
             <Wrapper>
@@ -162,16 +157,12 @@ class InputArea extends Component {
                 <Label>
                     Geplantes Gericht
                 </Label>
-                <Select options={options}
-                        value={this.state.gerichtInput}
-                        onChange={this.handleChangeInputGericht}
-                /> 
-                {/* <Hint options={this.state.namenListe} allowTabFill={true}>
+                <Hint options={this.state.namenListe} allowTabFill={true}>
                     <input
                     className='form-control'
                     value={this.state.gerichtInput}
                     onChange={this.handleChangeInputGericht} />
-                </Hint> */}
+                </Hint>
                 <Button onClick={this.handlePlanen}>Planen</Button>
                 <Button onClick={this.handleRandom}>Random</Button>
             </Wrapper>
