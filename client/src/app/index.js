@@ -11,7 +11,7 @@ function App() {
         <Router>
             <NavBar />
             <Switch>
-                <Route path="/planen" exact component={Essensplan} />
+                <Route path="/" exact component={Essensplan} />
                 <Route path="/gerichte/list" exact component={GerichteList} />
                 <Route path="/gerichte/create" exact component={GerichteInsert} />
                 <Route path="/gerichte/update/:id" exact component={GerichteUpdate} />

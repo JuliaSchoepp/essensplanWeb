@@ -18,7 +18,7 @@ class Links extends Component {
     render() {
         return (
             <React.Fragment>
-                <Link to="/planen" className="navbar-brand">
+                <Link to="/" className="navbar-brand">
                     Essensplan
                 </Link>
                 <Collapse>

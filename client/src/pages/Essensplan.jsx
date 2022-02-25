@@ -72,7 +72,7 @@ class InputArea extends Component {
     handleRandom = async (event) => {
         let keepSearching = true
         while (keepSearching){
-            if (this.state.randomTries.length == this.state.namenListe.length){
+            if (this.state.randomTries.length === this.state.namenListe.length){
                 this.setState({
                     gerichtInput: "Keine weiteren Optionen"
                 })
@@ -140,7 +140,7 @@ class InputArea extends Component {
     }
 
     render() {
-
+        const dayOptions = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
         return (
             <Wrapper>
                 <Title>
@@ -149,11 +149,12 @@ class InputArea extends Component {
                 <Label>
                     Name der Mahlzeit
                 </Label>
-                <InputText
-                    type="text"
+                <Hint options={dayOptions} allowTabFill={true}>
+                <input
+                    className='form-control'
                     value={this.state.nameInput}
-                    onChange={this.handleChangeInputName}
-                />
+                    onChange={this.handleChangeInputName} />
+                </Hint>
                 <Label>
                     Geplantes Gericht
                 </Label>
@@ -200,7 +201,7 @@ class MahlzeitRow extends Component {
 class PlanDarst extends Component {
     render(){
         const rows = [];
-        this.props.plans.map((plan) => {
+        this.props.plans.forEach((plan) => {
             rows.push(
                 <MahlzeitRow
                     plan={plan}
@@ -269,7 +270,7 @@ class Planer extends Component {
 
     deletePlan(mzName){
         const newList = this.state.geplanteMahlzeiten.filter( function (plan){
-            return plan.nameMz != mzName
+            return plan.nameMz !== mzName
         })
         this.setState({
             geplanteMahlzeiten: newList
