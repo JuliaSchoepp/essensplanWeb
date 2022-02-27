@@ -1,6 +1,6 @@
 {
-  "short_name": "Essensplan",
-  "name": "Essensplan",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",

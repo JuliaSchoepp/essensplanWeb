@@ -126,7 +126,7 @@ getGerichte = async (req, res) => {
 }
 
 formatEinkaufsliste = function(jsonString){
-    return jsonString.replace("{", "").replace("}", "").replaceAll("\"", "").replaceAll(",", "")
+    return jsonString.replace("{", "").replace("}", "").replaceAll("\"", "").replaceAll(",", "").replaceAll(/[\n\r]/g, '')
 }
 
 printPDF = function(planObjects){
@@ -146,7 +146,7 @@ printPDF = function(planObjects){
                 underline: 'true'
             }).moveUp().text(plan.gericht, {
             align: 'left',
-            indent: 100
+            indent: 130
         }).moveDown()
     }
     )
