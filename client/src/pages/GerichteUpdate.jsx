@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import api from '../api'
 
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
 
 const Title = styled.h1.attrs({
     className: 'h1',

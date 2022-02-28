@@ -22,11 +22,6 @@ const Label = styled.label`
     margin: 5px;
 `
 
-const InputText = styled.input.attrs({
-    className: 'form-control',
-})`
-`
-
 const Button = styled.button.attrs({
     className: `btn btn-primary`,
 })`

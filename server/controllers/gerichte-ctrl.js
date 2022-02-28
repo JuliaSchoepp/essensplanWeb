@@ -125,14 +125,10 @@ getGerichte = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
-formatEinkaufsliste = function(jsonString){
-    return jsonString.replace("{", "").replace("}", "").replaceAll("\"", "").replaceAll(",", "").replaceAll(/[\n\r]/g, '')
-}
-
 printPDF = function(planObjects){
     const PDFDocument = require('pdfkit');
     const doc = new PDFDocument({font: 'Helvetica'});
-    doc.pipe(fs.createWriteStream('../downloads/wochenplan.pdf'));
+    doc.pipe(fs.createWriteStream('/usr/src/app/downloads/wochenplan.pdf'));
     doc.fontSize(20);
     doc.font('Helvetica-Bold')
         .text('Wochenplan', {
@@ -183,18 +179,20 @@ savePlan = async (req, res) => {
             ...acc,
             [key]: einkaufsliste[key]
         }), {})
-        printString = formatEinkaufsliste(JSON.stringify(sorted, null, 2));
-        fs.writeFileSync('../downloads/einkaufsliste.txt', printString, 'utf-8');
-    })
+        fs.writeFileSync('/usr/src/app/downloads/einkaufsliste.txt', JSON.stringify(sorted, null, 2)
+                                                            .replace("{", "").replace("}", "")
+                                                            .replaceAll("\"", "").replaceAll(",", "")
+                                                            .replaceAll("\n", ''), 'utf-8');
+    }).catch((error) => console.log(error))
 }
 
 downloadListe = async (req, res) => {
-    const file = "../downloads/einkaufsliste.txt";
+    const file = "/usr/src/app/downloads/einkaufsliste.txt";
     res.download(file, 'einkaufsliste.txt');
 }
 
 downloadPlan = async (req, res) => {
-    const file = "../downloads/wochenplan.pdf";
+    const file = "/usr/src/app/downloads/wochenplan.pdf";
     res.download(file, 'plan.pdf');
 }
 
