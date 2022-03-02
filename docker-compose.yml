@@ -20,7 +20,7 @@ services:
       - mongo
 
   mongo:
-    image: mongo:3.6.19-xenial
+    image: arm7/mongo:latest
     ports:
       - "27017:27017"
     networks:
