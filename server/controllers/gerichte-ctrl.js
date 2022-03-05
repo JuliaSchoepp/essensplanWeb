@@ -150,7 +150,7 @@ printPDF = function(planObjects){
 }
 
 formatEinkaufsliste = function(jsonString){
-    return jsonString.replace("{", "").replace("}", "").replace(/\"/g, "").replace(/,/g, "").replace(/\\n/g, "");
+    return jsonString.replace("{", "").replace("}", "").replace(/\"/g, "").replace(/,/g, "").replace(/[\r\n]+/, "");
 }
 
 savePlan = async (req, res) => {

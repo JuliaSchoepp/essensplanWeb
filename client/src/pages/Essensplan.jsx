@@ -225,12 +225,12 @@ class PlanDarst extends Component {
 class DownloadArea extends Component {
     handleDownloadPlan = event => {
         event.preventDefault();
-        window.open('http://localhost:3000/api/downloads/plan')
+        window.open('http://192.168.178.33:3000/api/downloads/plan')
     }
 
     handleDownloadListe = event => {
         event.preventDefault();
-        window.open('http://localhost:3000/api/downloads/liste')
+        window.open('http://192.168.178.33:3000/api/downloads/liste')
     }
 
     render(){

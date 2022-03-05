@@ -7,6 +7,8 @@ services:
       - "8000:8000"
     networks:
       - mern-app
+    restart: always
+
 
   api-server:
     image: api-server
@@ -18,15 +20,17 @@ services:
       - downloads:/downloads
     depends_on:
       - mongo
+    restart: always
 
   mongo:
-    image: arm7/mongo:latest
+    image: mongo:3.6.19-xenial
     ports:
       - "27017:27017"
     networks:
       - mern-app
     volumes:
       - mongo-data:/data/db
+    restart: always
 
 networks:
   mern-app:
